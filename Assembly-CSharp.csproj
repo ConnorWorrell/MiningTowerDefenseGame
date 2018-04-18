@@ -46,7 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\BlueCircleController.cs" />
+     <Compile Include="Assets\BlueCircles\Blue1\BlueCircleController.cs" />
  <Reference Include="Facebook.Unity.Settings">
  <HintPath>C:/Users/Connor/Documents/Stuff/Library/FacebookSDK/Facebook.Unity.Settings.dll</HintPath>
  </Reference>

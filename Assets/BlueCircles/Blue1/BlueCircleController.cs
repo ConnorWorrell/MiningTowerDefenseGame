@@ -6,7 +6,8 @@ public class BlueCircleController : MonoBehaviour {
 
 	//Different Circles That will be rotated to make effect
 	public GameObject Circle1, Circle2, Circle3, Circle4, Circle5, Circle6;
-
+	//ShotDepression is Depression when shooting, ShotPlayBackSpeed is how much shot depression changes, MaxShotDepression is maximum depression when shooting, Scalex and Scaley are keep track of scaling animation when shooting
+	private float ShotDepression = 0, ShotPlayBackSpeed = 20, MaxShotDepression = 3, Scalex = 1, Scaley = 1;
 	//Power is main control, Levels is number of circles shown, MaxPower is maximum Power, Spin constant is a spin multiplier, Depression Constant is a depression multiplier
 	public float Power = 0, Levels = 6, MaxPower = 40,  SpinConstant = 71, DepressionConstant = 100;
 	//Spin is Current Spin Speed, Depression is current depression, unlock depression is the depression where circle1 and circle2 are no longer spinning at the same speed
@@ -24,7 +25,20 @@ public class BlueCircleController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		if (Levels < 6)
+			Circle6.gameObject.SetActive (false);
+		if (Levels < 5)
+			Circle5.gameObject.SetActive (false);
+		if (Levels < 4)
+			Circle4.gameObject.SetActive (false);
+		if (Levels < 3)
+			Circle3.gameObject.SetActive (false);
+		if (Levels < 2)
+			Circle2.gameObject.SetActive (false);
+		if (Levels < 1) {
+			Debug.LogWarning ("Spawned Circle with no rings");
+			Circle1.gameObject.SetActive (false);
+		}
 	}
 	
 	// Update is called once per frame
@@ -39,13 +53,43 @@ public class BlueCircleController : MonoBehaviour {
 		Spin = (Power / MaxSpin) * SpinConstant;
 		Depression = (Power / (MaxDepression*DepressionConstant));
 
-		//Apply depression to circles
-		Circle1.transform.localPosition = new Vector3 (0, 0, Depression*2.5f);
-		Circle2.transform.localPosition = new Vector3 (0, 0, Depression*2.0f);
-		Circle3.transform.localPosition = new Vector3 (0, 0, Depression*1.5f);
-		Circle4.transform.localPosition = new Vector3 (0, 0, Depression*1.25f);
-		Circle5.transform.localPosition = new Vector3 (0, 0, Depression*1.1f);
-		Circle6.transform.localPosition = new Vector3 (0, 0, Depression);
+		if (Shoot == false) {
+			//If not shooting apply depression to circles
+			Circle1.transform.localPosition = new Vector3 (0, 0, Depression * 2.5f);
+			Circle2.transform.localPosition = new Vector3 (0, 0, Depression * 2.0f);
+			Circle3.transform.localPosition = new Vector3 (0, 0, Depression * 1.5f);
+			Circle4.transform.localPosition = new Vector3 (0, 0, Depression * 1.25f);
+			Circle5.transform.localPosition = new Vector3 (0, 0, Depression * 1.1f);
+			Circle6.transform.localPosition = new Vector3 (0, 0, Depression);
+			ShotDepression = Depression;
+		} else {
+			//Play Shoot Animation
+
+			ShotDepression = Mathf.Abs(ShotDepression) < MaxShotDepression ? ShotDepression - ShotPlayBackSpeed*Time.deltaTime: ShotDepression;
+
+			Circle1.transform.localPosition = new Vector3 (0, 0, ShotDepression * 2.5f);
+			Circle2.transform.localPosition = new Vector3 (0, 0, ShotDepression * 2.0f);
+			Circle3.transform.localPosition = new Vector3 (0, 0, ShotDepression * 1.5f);
+			Circle4.transform.localPosition = new Vector3 (0, 0, ShotDepression * 1.25f);
+			Circle5.transform.localPosition = new Vector3 (0, 0, ShotDepression * 1.1f);
+			Circle6.transform.localPosition = new Vector3 (0, 0, ShotDepression);
+		}
+
+		if (ShotDepression < -.5) {
+
+			Scalex = Scalex < 0.1f ? 0 : Scalex - 10f * Time.deltaTime;
+			Scaley = Scaley < 0.1f ? 0 : Scaley - 10f * Time.deltaTime;
+		} else {
+			Scalex = 1;
+			Scaley = 1;
+		}
+
+		Circle1.transform.localScale = new Vector3 (Scalex, Scaley, 0);
+		Circle2.transform.localScale = new Vector3 (Scalex, Scaley, 0);
+		Circle3.transform.localScale = new Vector3 (Scalex, Scaley, 0);
+		Circle4.transform.localScale = new Vector3 (Scalex, Scaley, 0);
+		Circle5.transform.localScale = new Vector3 (Scalex, Scaley, 0);
+		Circle6.transform.localScale = new Vector3 (Scalex, Scaley, 0);
 
 		//Circle1 and Circle2 locked together
 		if (Depression < UnlockDepression) {
@@ -76,18 +120,19 @@ public class BlueCircleController : MonoBehaviour {
 				SpinAddition = 0;
 
 			//Apply rotation to circle1 and circle2
-			Circle1.transform.Rotate (0, 0, (Spin * 16 + SpinAddition) * Time.deltaTime);
-			Circle2.transform.Rotate (0, 0, (Spin * 16) * Time.deltaTime);
+			Circle1.transform.Rotate (0, 0, (Spin * 7 + SpinAddition) * Time.deltaTime);
+			Circle2.transform.Rotate (0, 0, (Spin * 7) * Time.deltaTime);
 		} else {
 			//If no allignment requrired between circle 1 and circle 2 apply rotation to circle1 and circle2
-			Circle1.transform.Rotate (0, 0, Spin * 32 * Time.deltaTime);
-			Circle2.transform.Rotate (0, 0, Spin * 16 * Time.deltaTime);
+			//((Depression-UnlockDepression)*8)*((Depression-UnlockDepression)*8) is used for a smooth transition from circle1 and circle2 locked to unlocked
+			Circle1.transform.Rotate (0, 0, Spin * (7+((Depression-UnlockDepression)*8)*((Depression-UnlockDepression)*8))* Time.deltaTime);
+			Circle2.transform.Rotate (0, 0, Spin * 7 * Time.deltaTime);
 			TargetAngle = 50;
 			TargetAngleLowest = 360;
 		}
 		//Apply rotation to circles 3 through 6
-		Circle3.transform.Rotate (0, 0, Spin * 8 * Time.deltaTime);
-		Circle4.transform.Rotate (0, 0, Spin * 4 * Time.deltaTime);
+		Circle3.transform.Rotate (0, 0, Spin * 5 * Time.deltaTime);
+		Circle4.transform.Rotate (0, 0, Spin * 3 * Time.deltaTime);
 		Circle5.transform.Rotate (0, 0, Spin * 2 * Time.deltaTime);
 		Circle6.transform.Rotate (0, 0, Spin * Time.deltaTime);
 	}
