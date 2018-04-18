@@ -57,12 +57,13 @@ public class BlueCircleController : MonoBehaviour {
 			RotationDifference = Circle1Rot - Circle2Rot > 0 ? Circle1Rot - Circle2Rot : Circle1Rot - Circle2Rot + 360;
 			RotationDifference = RotationDifference == 360 ? 0 : RotationDifference;
 
-			for (int i = 0; i < TargetAngles.Length; i++) {
-				if (TargetAngle > Mathf.Abs (TargetAngles [i] - RotationDifference)) {
-					if(TargetAngleLowest > Mathf.Abs (TargetAngles [i] - RotationDifference))
-					{
-						TargetAngleLowest = Mathf.Abs (TargetAngles [i] - RotationDifference);
-						CorrespondingTargetAngle = TargetAngles [i];
+			if (TargetAngleLowest == 360) {
+				for (int i = 0; i < TargetAngles.Length; i++) {
+					if (TargetAngle > Mathf.Abs (TargetAngles [i] - RotationDifference)) {
+						if (TargetAngleLowest > Mathf.Abs (TargetAngles [i] - RotationDifference)) {
+							TargetAngleLowest = Mathf.Abs (TargetAngles [i] - RotationDifference);
+							CorrespondingTargetAngle = TargetAngles [i];
+						}
 					}
 				}
 			}
