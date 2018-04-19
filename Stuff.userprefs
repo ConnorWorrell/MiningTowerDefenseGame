@@ -1,8 +1,10 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\BlueCircleController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\BlueCircles\Blue1\BlueCircleController.cs">
     <Files>
-      <File FileName="Assets\BlueCircleController.cs" Line="60" Column="35" />
+      <File FileName="Assets\BlueCircles\Blue1\BlueCircleController.cs" Line="8" Column="57" />
+      <File FileName="Assets\Player\Overview\PlayerOverviewer.cs" Line="7" Column="49" />
+      <File FileName="Assets\Player\Player1\Player1.cs" Line="62" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
