@@ -7,7 +7,7 @@ public class PlayerOverviewer : MonoBehaviour {
 	//Variables that are to be read by other things
 	public bool MoveForward = false, MoveBackward = false, MoveLeft = false, MoveRight = false;
 	public bool LeftClick = false, RightClick = false, CenterClick = false, Jump = false;
-	public float Mousex = 0, Mousey = 0;
+	public float Mousex = 0, Mousey = 0, Mousedx = 0, Mousedy = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -31,6 +31,9 @@ public class PlayerOverviewer : MonoBehaviour {
 		Mousex = Input.mousePosition.x;
 		Mousey = Input.mousePosition.y;
 
+		//Mouse movement intentions
+		Mousedx = Input.GetAxis ("Mouse X");
+		Mousedy = Input.GetAxis ("Mouse Y");
 
 	}
 }
