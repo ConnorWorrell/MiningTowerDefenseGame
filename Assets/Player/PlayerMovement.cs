@@ -104,11 +104,17 @@ public class PlayerMovement : MonoBehaviour {
 		//Multiply normalized force by scaling factors
 		ForceApplying.Set (ForceApplying.x * HorizontalMovementMultiplier, 0, ForceApplying.z * ForwardMovementMultiplier);
 
+		//Rotate forces to allign with rotation of camera
+		ForceApplying = ForceApplying.x * gameObject.transform.right + gameObject.transform.forward * ForceApplying.z + gameObject.transform.up * ForceApplying.y;
+
 		//Apply friction/air resistance porportional to v|v| depending on wether the player is on the ground
 		if (OnGround)
 			ForceApplying.Set (ForceApplying.x - Velocity.x * Mathf.Abs(Velocity.x) * DragForceXGround, ForceApplying.y, ForceApplying.z - Velocity.z * Mathf.Abs(Velocity.z) * DragForceZGround);
 		else
 			ForceApplying.Set (ForceApplying.x - Velocity.x * Mathf.Abs(Velocity.x) * DragForceXAir, ForceApplying.y, ForceApplying.z - Velocity.z * Mathf.Abs(Velocity.z) * DragForceZAir);
+
+		Debug.Log (gameObject.transform.forward);
+
 		//Apply the force ot the body
 		Ridgidbody.AddForce (ForceApplying);
 	}
