@@ -41,9 +41,11 @@ public class PlayerMovement : MonoBehaviour {
 	void Update () {
 		GetInputs ();
 		RotateCamera ();
+
 	}
 
 	void FixedUpdate () {
+
 		ApplyMovements ();
 	}
 
