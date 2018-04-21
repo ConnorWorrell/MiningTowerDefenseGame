@@ -6,7 +6,7 @@ public class Player1 : MonoBehaviour {
 
 	//Game Objects that are needed for the player to function
 	public GameObject PlayerOverviewerPrefab, SpawnPoint, BlueCircle;
-	private GameObject Circle;
+	public GameObject Circle;
 
 	//PowerSupplied is ammount of power put into circle, power supplied multiplier changes rate of power supply
 	public float PowerSupplied = 0, PowerSuppliedMultiplier = 20;
@@ -30,7 +30,7 @@ public class Player1 : MonoBehaviour {
 		UnShooting = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().RightClick;
 
 		//If there is not a circle present no power is supplied
-		if(GameObject.Find("Blue1(Clone)") == null)
+		if(Circle == null)
 			PowerSupplied = 0;
 
 		// If power is being removed from the circle, and circle has no power and not holding circle power, remove circle
@@ -40,17 +40,17 @@ public class Player1 : MonoBehaviour {
 		//If adding or removing power from circle
 		if (Shooting || UnShooting) {
 			//if no circle make a circle
-			if (GameObject.Find ("Blue1(Clone)") == null && Shooting)
+			if (Circle == null && Shooting)
 				Circle = Instantiate (BlueCircle, SpawnPoint.transform);
 			//Calculate power being supplied to the circle
 			PowerSupplied = PowerSupplied + PowerSuppliedMultiplier * Time.deltaTime * ((Shooting ? 1 : 0) - (UnShooting ? 1 : 0));
 			PowerSupplied = PowerSupplied < 0 ? 0 : PowerSupplied > 40 ? 40 : PowerSupplied;
 			//Send power to circle if there is a circle
-			if(GameObject.Find ("Blue1(Clone)") != null)
+			if(Circle != null)
 				Circle.GetComponent<BlueCircleController> ().Power = PowerSupplied;
 		} else {
 			//If Not fuleing or unfueling, and circle has power, shoot circle
-			if (GameObject.Find ("Blue1(Clone)") != null && PowerSupplied > 0)
+			if (Circle != null && PowerSupplied > 0)
 				Circle.GetComponent<BlueCircleController> ().Shoot = true;
 			//If not fueling or unfueling and circle has no pwer, remove circle
 			else if (PowerSupplied == 0)

@@ -6,7 +6,7 @@ public class PlayerOverviewer : MonoBehaviour {
 
 	//Variables that are to be read by other things
 	public bool MoveForward = false, MoveBackward = false, MoveLeft = false, MoveRight = false;
-	public bool LeftClick = false, RightClick = false, CenterClick = false;
+	public bool LeftClick = false, RightClick = false, CenterClick = false, Jump = false;
 	public float Mousex = 0, Mousey = 0;
 
 	// Use this for initialization
@@ -22,6 +22,7 @@ public class PlayerOverviewer : MonoBehaviour {
 		MoveBackward = Input.GetKey (KeyCode.S);
 		MoveLeft = Input.GetKey (KeyCode.A);
 		MoveRight = Input.GetKey (KeyCode.D);
+		Jump = Input.GetKey (KeyCode.Space);
 
 		//Mouse Intentions
 		LeftClick = Input.GetMouseButton (0);

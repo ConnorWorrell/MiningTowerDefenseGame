@@ -49,6 +49,7 @@
      <Compile Include="Assets\BlueCircles\Blue1\BlueCircleController.cs" />
      <Compile Include="Assets\Player\Overview\PlayerOverviewer.cs" />
      <Compile Include="Assets\Player\Player1\Player1.cs" />
+     <Compile Include="Assets\Player\PlayerMovement.cs" />
  <Reference Include="Facebook.Unity.Settings">
  <HintPath>C:/Users/Connor/Documents/Stuff/Library/FacebookSDK/Facebook.Unity.Settings.dll</HintPath>
  </Reference>
