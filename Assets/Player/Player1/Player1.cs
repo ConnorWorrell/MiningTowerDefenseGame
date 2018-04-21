@@ -5,14 +5,15 @@ using UnityEngine;
 public class Player1 : MonoBehaviour {
 
 	//Game Objects that are needed for the player to function
-	public GameObject PlayerOverviewerPrefab, SpawnPoint, BlueCircle;
-	public GameObject Circle;
+	public GameObject PlayerOverviewerPrefab, SpawnPoint;
+	public GameObject GunPrefab, Gun;
 
 	//PowerSupplied is ammount of power put into circle, power supplied multiplier changes rate of power supply
-	public float PowerSupplied = 0, PowerSuppliedMultiplier = 20;
+	public float PowerStorage = 0, PowerTransferRate = 10, PowerRechargeRate = 0;
+	private float PowerTransferRateToGun = 0;
 
 	//LeftClick for to add power, right click to subtract power
-	public bool Shooting = false, UnShooting = false;
+	public bool Shooting = false, Charging = false;
 
 	// Use this for initialization
 	void Start () {
@@ -21,41 +22,38 @@ public class Player1 : MonoBehaviour {
 			GameObject go = Instantiate (PlayerOverviewerPrefab, new Vector3 (0, 0, 0), Quaternion.identity);
 			go.name = go.name.Replace ("(Clone)", "");
 		}
+
+		SpawnGunAtPosition ();
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		PowerStorage = PowerStorage + PowerRechargeRate * Time.deltaTime;
+
 		//GetShooting and Unshooting from player overviewer
 		Shooting = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().LeftClick;
-		UnShooting = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().RightClick;
+		Charging = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().RightClick;
 
-		//If there is not a circle present no power is supplied
-		if(Circle == null)
-			PowerSupplied = 0;
-
-		// If power is being removed from the circle, and circle has no power and not holding circle power, remove circle
-		if (UnShooting && PowerSupplied == 0 && !Shooting)
-			Destroy (Circle);
-
-		//If adding or removing power from circle
-		if (Shooting || UnShooting) {
-			//if no circle make a circle
-			if (Circle == null && Shooting)
-				Circle = Instantiate (BlueCircle, SpawnPoint.transform);
-			//Calculate power being supplied to the circle
-			PowerSupplied = PowerSupplied + PowerSuppliedMultiplier * Time.deltaTime * ((Shooting ? 1 : 0) - (UnShooting ? 1 : 0));
-			PowerSupplied = PowerSupplied < 0 ? 0 : PowerSupplied > 40 ? 40 : PowerSupplied;
-			//Send power to circle if there is a circle
-			if(Circle != null)
-				Circle.GetComponent<BlueCircleController> ().Power = PowerSupplied;
-		} else {
-			//If Not fuleing or unfueling, and circle has power, shoot circle
-			if (Circle != null && PowerSupplied > 0)
-				Circle.GetComponent<BlueCircleController> ().Shoot = true;
-			//If not fueling or unfueling and circle has no pwer, remove circle
-			else if (PowerSupplied == 0)
-				Destroy (Circle);
+		Gun.GetComponent<Gun1Controller> ().Fire = Shooting;
+		if (Charging && PowerStorage > PowerTransferRateToGun * Time.deltaTime) {
+			Gun.GetComponent<Gun1Controller> ().StoredPower = Gun.GetComponent<Gun1Controller> ().StoredPower + PowerTransferRateToGun * Time.deltaTime;
+			PowerStorage = PowerStorage - PowerTransferRateToGun * Time.deltaTime;
 		}
+
+
+	}
+
+	void SpawnGunAtPosition (){
+		if (GunPrefab != null && Gun == null) {
+			Gun = Instantiate (GunPrefab, SpawnPoint.transform);
+		} else if (GunPrefab != null && Gun != null) {
+			Destroy (Gun);
+			Gun = Instantiate (GunPrefab, SpawnPoint.transform);
+		}
+
+		PowerTransferRateToGun = Gun.GetComponent<Gun1Controller> ().MaxChargeRate < PowerTransferRate ? Gun.GetComponent<Gun1Controller> ().MaxChargeRate : PowerTransferRate;
 
 	}
 }

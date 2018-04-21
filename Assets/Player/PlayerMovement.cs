@@ -113,8 +113,6 @@ public class PlayerMovement : MonoBehaviour {
 		else
 			ForceApplying.Set (ForceApplying.x - Velocity.x * Mathf.Abs(Velocity.x) * DragForceXAir, ForceApplying.y, ForceApplying.z - Velocity.z * Mathf.Abs(Velocity.z) * DragForceZAir);
 
-		Debug.Log (gameObject.transform.forward);
-
 		//Apply the force ot the body
 		Ridgidbody.AddForce (ForceApplying);
 	}
