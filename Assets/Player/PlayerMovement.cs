@@ -80,7 +80,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	void ApplyMovements(){
 		//Determine wether an object is beneath the player
-		RaycastHit hit;
+		//RaycastHit hit;
 		Debug.DrawRay (transform.position, transform.TransformDirection (Vector3.down)*JumpDistance);
 		if (Physics.Raycast (transform.position, transform.TransformDirection (Vector3.down), JumpDistance))
 			OnGround = true;
@@ -99,7 +99,9 @@ public class PlayerMovement : MonoBehaviour {
 			((Right ? 1 : -1) - (Left ? 1 : -1)), 0,
 			((Forward ? 1 : -1) - (Backward ? 1 : -1)));
 		else
-			ForceApplying = new Vector3(0,0,0);
+			ForceApplying = new Vector3(
+				((Right ? 0.5f : -0.5f) - (Left ? 0.5f : -0.5f)), 0,
+				((Forward ? 0.5f : -0.5f) - (Backward ? 0.5f : -0.5f)));
 		//Normalise force so going diagonally isn't twice the speed of going forward/backward
 		ForceApplying.Normalize ();
 
