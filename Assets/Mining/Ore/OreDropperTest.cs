@@ -16,6 +16,7 @@ public class OreDropperTest : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		//Spawn one ore at the game objects position at DropRate per second
 		if (PlannedDropTime < Time.timeSinceLevelLoad) {
 			Instantiate (Ore, gameObject.transform);
 			PlannedDropTime = (1 / DropRate) + Time.timeSinceLevelLoad;

@@ -1,13 +1,16 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Player\PlayerMovement.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Mining\Ore\MoveConveyor.cs">
     <Files>
-      <File FileName="Assets\BlueCircles\Blue1\BlueCircleController.cs" Line="25" Column="2" />
+      <File FileName="Assets\BlueCircles\Blue1\BlueCircleController.cs" Line="1" Column="1" />
       <File FileName="Assets\Player\Overview\PlayerOverviewer.cs" Line="26" Column="3" />
       <File FileName="Assets\Player\Player1\Player1.cs" Line="32" Column="3" />
-      <File FileName="Assets\Player\PlayerMovement.cs" Line="53" Column="24" />
-      <File FileName="Assets\Player\Hanheld\Gun1\Gun1Controller.cs" Line="38" Column="34" />
-      <File FileName="Assets\Player\Hanheld\Gun1\Shell1Controller.cs" Line="31" Column="17" />
+      <File FileName="Assets\Player\PlayerMovement.cs" Line="113" Column="3" />
+      <File FileName="Assets\Player\Hanheld\Gun1\Gun1Controller.cs" Line="1" Column="1" />
+      <File FileName="Assets\Player\Hanheld\Gun1\Shell1Controller.cs" Line="1" Column="1" />
+      <File FileName="Assets\Mining\Ore\MoveConveyor.cs" Line="32" Column="119" />
+      <File FileName="Assets\Mining\Ore\OreDropperTest.cs" Line="8" Column="2" />
+      <File FileName="Assets\Mining\Conveyor\ConveyorDirection.cs" Line="7" Column="35" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
