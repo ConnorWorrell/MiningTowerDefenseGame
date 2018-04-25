@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class Player1 : MonoBehaviour {
 
+	public int ObjectHoldingId = 0;
+	private int ObjectHoldingIdLast = 0;
+
+	public GameObject Holding, Camera;
+
 	//Game Objects that are needed for the player to function
-	public GameObject PlayerOverviewerPrefab, SpawnPoint;
-	public GameObject GunPrefab, Gun;
+	public GameObject PlayerOverviewerPrefab, SpawnPoint, ConveyorHoldPosition;
+	public GameObject HeldObject, ConveyorStraightBasicPrefab;
 
 	//PowerSupplied is ammount of power put into circle, power supplied multiplier changes rate of power supply
 	public float PowerStorage = 0, PowerTransferRate = 10, PowerRechargeRate = 0;
@@ -14,6 +19,7 @@ public class Player1 : MonoBehaviour {
 
 	//LeftClick for to add power, right click to subtract power
 	public bool Shooting = false, Charging = false;
+	private bool LeftClickLast = false;
 
 	// Use this for initialization
 	void Start () {
@@ -22,13 +28,67 @@ public class Player1 : MonoBehaviour {
 			GameObject go = Instantiate (PlayerOverviewerPrefab, new Vector3 (0, 0, 0), Quaternion.identity);
 			go.name = go.name.Replace ("(Clone)", "");
 		}
-
-		SpawnGunAtPosition ();
-
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if (Holding != null){
+			if(Holding.GetComponent<ID> () != null)
+				ObjectHoldingId = Holding.GetComponent<ID> ().ObjID;
+			else
+				Debug.LogError("Player Holding Object Without ID Number");
+		} else
+			ObjectHoldingId = 0;
+
+		if (ObjectHoldingId != ObjectHoldingIdLast) {
+			Destroy (HeldObject);
+		}
+		switch (ObjectHoldingId) {
+			case 1: //Gun1
+				Gun1 ();
+				break;
+			case 2: //Conveyor Straight Basic PrePlace
+				ConveyorStraightBasicPrePlace ();
+				break;
+			default://Nothing or unknown
+				break;
+		}
+		ObjectHoldingIdLast = ObjectHoldingId;
+	}
+
+	void ConveyorStraightBasicPrePlace() {
+		//if object is not being held the make it held
+		if(HeldObject == null)
+			HeldObject = Instantiate (Holding, ConveyorHoldPosition.transform);
+
+		//Find where player is looking
+		RaycastHit hit;
+		Debug.DrawRay (Camera.transform.position, Camera.transform.forward);
+		Physics.Raycast (Camera.transform.position, Camera.transform.forward, out hit, 5);
+
+		//If nothing that is snapable was hit then don't snap to anything
+		if (hit.collider == null || hit.collider.gameObject.GetComponentInParent<ConveyorDirection> () == null) {
+			HeldObject.transform.localPosition = new Vector3 (0, 0, 0);
+			HeldObject.transform.localRotation = Quaternion.Euler(new Vector3 (0, 0, 0));
+		} else {
+			//If something snapable is found then snap to it
+			HeldObject.transform.position = hit.collider.gameObject.GetComponentInParent<ConveyorDirection> ().gameObject.transform.position
+				- 1 * new Vector3(Mathf.Abs(Camera.transform.forward.x) > Mathf.Abs(Camera.transform.forward.z) ? Camera.transform.forward.x > 0 ? 1 : -1 : 0,
+					0, Mathf.Abs(Camera.transform.forward.z) > Mathf.Abs(Camera.transform.forward.x) ? Camera.transform.forward.z > 0 ? 1 : -1 : 0);
+			HeldObject.transform.rotation = hit.collider.gameObject.GetComponentInParent<ConveyorDirection> ().gameObject.transform.rotation;
+		}
+
+		if (GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().LeftClick == true && LeftClickLast == false) {
+			GameObject Temp = Instantiate (ConveyorStraightBasicPrefab, HeldObject.transform);
+			Temp.transform.parent = null;
+		}
+		LeftClickLast = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().LeftClick;
+	}
+
+	void Gun1 (){
+
+		if (HeldObject == null)
+			SpawnGunAtPosition ();
 
 		PowerStorage = PowerStorage + PowerRechargeRate * Time.deltaTime;
 
@@ -36,24 +96,25 @@ public class Player1 : MonoBehaviour {
 		Shooting = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().LeftClick;
 		Charging = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().RightClick;
 
-		Gun.GetComponent<Gun1Controller> ().Fire = Shooting;
+		HeldObject.GetComponent<Gun1Controller> ().Fire = Shooting;
 		if (Charging && PowerStorage > PowerTransferRateToGun * Time.deltaTime) {
-			Gun.GetComponent<Gun1Controller> ().StoredPower = Gun.GetComponent<Gun1Controller> ().StoredPower + PowerTransferRateToGun * Time.deltaTime;
+			HeldObject.GetComponent<Gun1Controller> ().StoredPower = HeldObject.GetComponent<Gun1Controller> ().StoredPower + PowerTransferRateToGun * Time.deltaTime;
 			PowerStorage = PowerStorage - PowerTransferRateToGun * Time.deltaTime;
 		}
-
-
 	}
 
 	void SpawnGunAtPosition (){
-		if (GunPrefab != null && Gun == null) {
-			Gun = Instantiate (GunPrefab, SpawnPoint.transform);
-		} else if (GunPrefab != null && Gun != null) {
-			Destroy (Gun);
-			Gun = Instantiate (GunPrefab, SpawnPoint.transform);
+		//If we should be hodling something, but we aren't then spawn it
+		if (Holding != null && HeldObject == null) {
+			HeldObject = Instantiate (Holding, SpawnPoint.transform);
+		//If we are holding something that we shouldn't be holding then delete it
+		} else if (Holding != null && HeldObject != null) {
+			Destroy (HeldObject);
+			HeldObject = Instantiate (Holding, SpawnPoint.transform);
 		}
 
-		PowerTransferRateToGun = Gun.GetComponent<Gun1Controller> ().MaxChargeRate < PowerTransferRate ? Gun.GetComponent<Gun1Controller> ().MaxChargeRate : PowerTransferRate;
+		//Grab power transfer rate from gun
+		PowerTransferRateToGun = HeldObject.GetComponent<Gun1Controller> ().MaxChargeRate < PowerTransferRate ? HeldObject.GetComponent<Gun1Controller> ().MaxChargeRate : PowerTransferRate;
 
 	}
 }

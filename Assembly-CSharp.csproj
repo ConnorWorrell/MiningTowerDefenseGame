@@ -52,6 +52,7 @@
      <Compile Include="Assets\Mining\Ore\OreDropperTest.cs" />
      <Compile Include="Assets\Player\Hanheld\Gun1\Gun1Controller.cs" />
      <Compile Include="Assets\Player\Hanheld\Gun1\Shell1Controller.cs" />
+     <Compile Include="Assets\Player\Hanheld\ID.cs" />
      <Compile Include="Assets\Player\Overview\PlayerOverviewer.cs" />
      <Compile Include="Assets\Player\Player1\Player1.cs" />
      <Compile Include="Assets\Player\PlayerMovement.cs" />
