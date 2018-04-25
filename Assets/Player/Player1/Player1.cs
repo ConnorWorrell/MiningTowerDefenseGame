@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player1 : MonoBehaviour {
 
+	public Transform Trackview;
+
 	public int ObjectHoldingId = 0;
 	private int ObjectHoldingIdLast = 0;
 
@@ -72,9 +74,14 @@ public class Player1 : MonoBehaviour {
 			HeldObject.transform.localRotation = Quaternion.Euler(new Vector3 (0, 0, 0));
 		} else {
 			//If something snapable is found then snap to it
+			Trackview = hit.collider.gameObject.GetComponentInParent<ConveyorDirection> ().gameObject.transform;
+
+			//Warning Apply Sunscreeen and Consume medication before continuing following code may cause cancer
+			//Code for snapping an object to another object, has issues between angles of 108 and 45 degrees
 			HeldObject.transform.position = hit.collider.gameObject.GetComponentInParent<ConveyorDirection> ().gameObject.transform.position
-				- 1 * new Vector3(Mathf.Abs(Camera.transform.forward.x) > Mathf.Abs(Camera.transform.forward.z) ? Camera.transform.forward.x > 0 ? 1 : -1 : 0,
-					0, Mathf.Abs(Camera.transform.forward.z) > Mathf.Abs(Camera.transform.forward.x) ? Camera.transform.forward.z > 0 ? 1 : -1 : 0);
+				//Code is as follows: Correcting for the (Det1 < Det2), and Det1 is negative, (Det1 > Det2), and Det2 is negative, and Both Det1 and Det2 are positive, lead to the snapping happening on the wrong side, ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\/ is where we begin calculating the position that the snapping happens, wether the camera forward is more in the direction of trackview right or left, then the respective track view is applied or is 0
+				+ (((Mathf.Abs(Vector3.Dot(Camera.transform.forward,Trackview.right))<Mathf.Abs(Vector3.Dot(Camera.transform.forward,Trackview.forward)) && Vector3.Dot(Camera.transform.forward,Trackview.right) < 0 && Vector3.Dot(Camera.transform.forward,Trackview.forward) > 0) || (Mathf.Abs(Vector3.Dot(Camera.transform.forward,Trackview.right))>Mathf.Abs(Vector3.Dot(Camera.transform.forward,Trackview.forward)) && Vector3.Dot(Camera.transform.forward,Trackview.forward) < 0 && Vector3.Dot(Camera.transform.forward,Trackview.right) > 0) || (Vector3.Dot(Camera.transform.forward,Trackview.right) > 0 && Vector3.Dot(Camera.transform.forward,Trackview.forward) > 0)) ? -1 : 1) * (Mathf.Abs (Vector3.Dot(Camera.transform.forward,Trackview.right)) > Mathf.Abs (Vector3.Dot(Camera.transform.forward,Trackview.forward)) ? Trackview.right : new Vector3(0,0,0)) + 
+				(((Mathf.Abs(Vector3.Dot(Camera.transform.forward,Trackview.right))<Mathf.Abs(Vector3.Dot(Camera.transform.forward,Trackview.forward)) && Vector3.Dot(Camera.transform.forward,Trackview.right) < 0 && Vector3.Dot(Camera.transform.forward,Trackview.forward) > 0) || (Mathf.Abs(Vector3.Dot(Camera.transform.forward,Trackview.right))>Mathf.Abs(Vector3.Dot(Camera.transform.forward,Trackview.forward)) && Vector3.Dot(Camera.transform.forward,Trackview.forward) < 0 && Vector3.Dot(Camera.transform.forward,Trackview.right) > 0) || (Vector3.Dot(Camera.transform.forward,Trackview.right) > 0 && Vector3.Dot(Camera.transform.forward,Trackview.forward) > 0)) ? -1 : 1) * (Mathf.Abs(Vector3.Dot(Camera.transform.forward,Trackview.forward)) > Mathf.Abs(Vector3.Dot(Camera.transform.forward,Trackview.right)) ? Trackview.forward : new Vector3(0,0,0));
 			HeldObject.transform.rotation = hit.collider.gameObject.GetComponentInParent<ConveyorDirection> ().gameObject.transform.rotation;
 		}
 
