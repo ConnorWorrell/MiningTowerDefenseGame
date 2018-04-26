@@ -22,6 +22,7 @@ public class Player1 : MonoBehaviour {
 	//LeftClick for to add power, right click to subtract power
 	public bool Shooting = false, Charging = false;
 	private bool LeftClickLast = false;
+	public int MouseScroll = 0, MouseScrollOffset = 0, MouseScrollL = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -59,6 +60,14 @@ public class Player1 : MonoBehaviour {
 	}
 
 	void ConveyorStraightBasicPrePlace() {
+
+		MouseScroll = (int)GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().MouseScroll;
+		//Keep MouseScrollL positive
+		if (MouseScrollL < 0)
+			MouseScrollOffset = MouseScrollOffset - 4;
+		//Offset keeps it positive, and since MouseScroll is read only MouseScroll L is the local version
+		MouseScrollL = MouseScroll - MouseScrollOffset;
+
 		//if object is not being held the make it held
 		if(HeldObject == null)
 			HeldObject = Instantiate (Holding, ConveyorHoldPosition.transform);
@@ -76,7 +85,8 @@ public class Player1 : MonoBehaviour {
 			//If something snapable is found then snap to it
 			Trackview = hit.collider.gameObject.GetComponentInParent<ConveyorDirection> ().gameObject.transform;
 
-			Debug.Log ((Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.right)) > Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.forward)) && Vector3.Dot (Camera.transform.forward, Trackview.forward) < 0 && Vector3.Dot (Camera.transform.forward, Trackview.right) > 0));
+			//Debug line for snapping, don't delete
+			//Debug.Log ((Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.right)) > Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.forward)) && Vector3.Dot (Camera.transform.forward, Trackview.forward) < 0 && Vector3.Dot (Camera.transform.forward, Trackview.right) > 0));
 
 			//Warning Apply Sunscreeen and Consume medication before continuing following code may cause cancer
 			//Code for snapping an object to another object, has issues between angles of 108 and 45 degrees
@@ -85,12 +95,34 @@ public class Player1 : MonoBehaviour {
 			+ (((Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.right)) < Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.forward)) && Vector3.Dot (Camera.transform.forward, Trackview.right) < 0 && Vector3.Dot (Camera.transform.forward, Trackview.forward) > 0) || (Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.right)) > Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.forward)) && Vector3.Dot (Camera.transform.forward, Trackview.forward) < 0 && Vector3.Dot (Camera.transform.forward, Trackview.right) > 0) || (Vector3.Dot (Camera.transform.forward, Trackview.right) > 0 && Vector3.Dot (Camera.transform.forward, Trackview.forward) > 0)) ? -1 : 1) * (Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.right)) > Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.forward)) && Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.right)) > Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.up)) ? Trackview.right : new Vector3 (0, 0, 0)) +
 			(((Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.right)) < Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.forward)) && Vector3.Dot (Camera.transform.forward, Trackview.right) < 0 && Vector3.Dot (Camera.transform.forward, Trackview.forward) > 0) || (Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.right)) > Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.forward)) && Vector3.Dot (Camera.transform.forward, Trackview.forward) < 0 && Vector3.Dot (Camera.transform.forward, Trackview.right) > 0) || (Vector3.Dot (Camera.transform.forward, Trackview.right) > 0 && Vector3.Dot (Camera.transform.forward, Trackview.forward) > 0)) ? -1 : 1) * (Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.forward)) > Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.right)) && Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.forward)) > Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.up)) ? Trackview.forward : new Vector3 (0, 0, 0)) +
 				(((Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.right)) > Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.forward)) && Vector3.Dot (Camera.transform.forward, Trackview.forward) < 0 && Vector3.Dot (Camera.transform.forward, Trackview.right) > 0) || ((Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.right)) > Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.forward)) && Vector3.Dot (Camera.transform.forward, Trackview.forward) < 0 && Vector3.Dot (Camera.transform.forward, Trackview.right) > 0))==false) ? 1 : -1) * (Vector3.Dot (Camera.transform.forward, Trackview.up) > 0 ? -1 : 1) * (Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.up)) > Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.right)) && Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.up)) > Mathf.Abs (Vector3.Dot (Camera.transform.forward, Trackview.forward)) ? Trackview.up : new Vector3 (0, 0, 0));
-			HeldObject.transform.rotation = hit.collider.gameObject.GetComponentInParent<ConveyorDirection> ().gameObject.transform.rotation;
+
+			Debug.Log (Trackview.localRotation.eulerAngles);
+
+			//4 different rotations for the tracks to placed on
+			switch (MouseScrollL % 4) {
+			case 3:
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.localRotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 270f,Trackview.localRotation.eulerAngles.x));
+				break;
+			case 2:
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.localRotation.eulerAngles.x,Trackview.rotation.eulerAngles.y - 180f,-Trackview.localRotation.eulerAngles.z));
+				break;
+			case 1:
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 90f,-Trackview.localRotation.eulerAngles.x));
+				break;
+			default:// case 0
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.x,Trackview.rotation.eulerAngles.y,Trackview.localRotation.eulerAngles.z));
+				break;
+
+			}
+
+			//HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.z * (MouseScroll % 4),Trackview.localRotation.eulerAngles.y * (MouseScroll % 4) * 90f,Trackview.localRotation.eulerAngles.z * (MouseScroll % 4)));
 		}
 
 		if (GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().LeftClick == true && LeftClickLast == false) {
 			GameObject Temp = Instantiate (ConveyorStraightBasicPrefab, HeldObject.transform);
 			Temp.transform.parent = null;
+			//After you place a track reset the rotation so if a track is placed on the track that just was placed, it is placed facing the same direction
+			MouseScrollOffset = MouseScroll;
 		}
 		LeftClickLast = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().LeftClick;
 	}
