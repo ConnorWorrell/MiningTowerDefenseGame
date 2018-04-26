@@ -2,12 +2,13 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Player\Player1\Player1.cs">
     <Files>
-      <File FileName="Assets\Player\Player1\Player1.cs" Line="70" Column="3" />
+      <File FileName="Assets\Player\Player1\Player1.cs" Line="124" Column="146" />
       <File FileName="Assets\Player\PlayerMovement.cs" Line="113" Column="3" />
-      <File FileName="Assets\Player\Hanheld\Gun1\Gun1Controller.cs" Line="42" Column="34" />
+      <File FileName="Assets\Player\Hanheld\Gun1\Gun1Controller.cs" Line="1" Column="1" />
       <File FileName="Assets\Player\Hanheld\Gun1\Shell1Controller.cs" Line="1" Column="1" />
-      <File FileName="Assets\Mining\Ore\MoveConveyor.cs" Line="47" Column="58" />
-      <File FileName="Assets\Mining\Ore\OreDropperTest.cs" Line="19" Column="70" />
+      <File FileName="Assets\Mining\Ore\MoveConveyor.cs" Line="1" Column="1" />
+      <File FileName="Assets\Mining\Ore\OreDropperTest.cs" Line="1" Column="1" />
+      <File FileName="Assets\Player\Overview\PlayerOverviewer.cs" Line="21" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
