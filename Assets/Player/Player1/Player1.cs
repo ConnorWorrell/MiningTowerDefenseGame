@@ -13,7 +13,8 @@ public class Player1 : MonoBehaviour {
 
 	//Game Objects that are needed for the player to function
 	public GameObject PlayerOverviewerPrefab, SpawnPoint, ConveyorHoldPosition;
-	public GameObject HeldObject, ConveyorStraightBasicPrefab;
+	public GameObject HeldObject, ConveyorStraightBasicPrefab, ConveyorLeft90BasicPrefab, ConveyorRight90BasicPrefab;
+	private GameObject HoldingPlace;
 
 	//PowerSupplied is ammount of power put into circle, power supplied multiplier changes rate of power supply
 	public float PowerStorage = 0, PowerTransferRate = 10, PowerRechargeRate = 0;
@@ -23,6 +24,8 @@ public class Player1 : MonoBehaviour {
 	public bool Shooting = false, Charging = false;
 	private bool LeftClickLast = false;
 	public int MouseScroll = 0, MouseScrollOffset = 0, MouseScrollL = 0;
+
+	public Vector3 StartingPosition, StartingRotation;
 
 	// Use this for initialization
 	void Start () {
@@ -47,14 +50,29 @@ public class Player1 : MonoBehaviour {
 			Destroy (HeldObject);
 		}
 		switch (ObjectHoldingId) {
-			case 1: //Gun1
-				Gun1 ();
-				break;
-			case 2: //Conveyor Straight Basic PrePlace
-				ConveyorStraightBasicPrePlace ();
-				break;
-			default://Nothing or unknown
-				break;
+		case 1: //Gun1
+			Gun1 ();
+			break;
+		case 2: //Conveyor Straight Basic PrePlace
+			ConveyorStraightBasicPrePlace ();
+			HoldingPlace = ConveyorStraightBasicPrefab;
+			StartingPosition = HoldingPlace.transform.position;
+			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
+			break;
+		case 3: //Conveyor Right 90 Basic PrePlace
+			ConveyorStraightBasicPrePlace ();
+			HoldingPlace = ConveyorRight90BasicPrefab;
+			StartingPosition = HoldingPlace.transform.position;
+			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
+			break;
+		case 4: //Conveyor Left 90 Basic PrePlace
+			ConveyorStraightBasicPrePlace ();
+			HoldingPlace = ConveyorLeft90BasicPrefab;
+			StartingPosition = HoldingPlace.transform.position;
+			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
+			break;
+		default://Nothing or unknown
+			break;
 		}
 		ObjectHoldingIdLast = ObjectHoldingId;
 	}
@@ -79,8 +97,8 @@ public class Player1 : MonoBehaviour {
 
 		//If nothing that is snapable was hit then don't snap to anything
 		if (hit.collider == null || hit.collider.gameObject.GetComponentInParent<ConveyorDirection> () == null) {
-			HeldObject.transform.localPosition = new Vector3 (0, 0, 0);
-			HeldObject.transform.localRotation = Quaternion.Euler(new Vector3 (0, 0, 0));
+			HeldObject.transform.localPosition = new Vector3 (0, 0, 0);// StartingPosition;
+			HeldObject.transform.localRotation = Quaternion.Euler (new Vector3 (0, 0, 0));//Quaternion.Euler(StartingRotation);
 		} else {
 			//If something snapable is found then snap to it
 			Trackview = hit.collider.gameObject.GetComponentInParent<ConveyorDirection> ().gameObject.transform;
@@ -101,16 +119,16 @@ public class Player1 : MonoBehaviour {
 			//4 different rotations for the tracks to placed on
 			switch (MouseScrollL % 4) {
 			case 3:
-				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.localRotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 270f,Trackview.localRotation.eulerAngles.x));
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.localRotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 270f + StartingRotation.y,Trackview.localRotation.eulerAngles.x));
 				break;
 			case 2:
-				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.localRotation.eulerAngles.x,Trackview.rotation.eulerAngles.y - 180f,-Trackview.localRotation.eulerAngles.z));
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.localRotation.eulerAngles.x,Trackview.rotation.eulerAngles.y - 180f + StartingRotation.y,-Trackview.localRotation.eulerAngles.z));
 				break;
 			case 1:
-				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 90f,-Trackview.localRotation.eulerAngles.x));
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 90f + StartingRotation.y,-Trackview.localRotation.eulerAngles.x));
 				break;
 			default:// case 0
-				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.x,Trackview.rotation.eulerAngles.y,Trackview.localRotation.eulerAngles.z));
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.x,Trackview.rotation.eulerAngles.y + StartingRotation.y,Trackview.localRotation.eulerAngles.z));
 				break;
 
 			}
@@ -119,7 +137,7 @@ public class Player1 : MonoBehaviour {
 		}
 
 		if (GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().LeftClick == true && LeftClickLast == false) {
-			GameObject Temp = Instantiate (ConveyorStraightBasicPrefab, HeldObject.transform);
+			GameObject Temp = Instantiate (HoldingPlace, HeldObject.transform.position, Quaternion.Euler(HeldObject.transform.rotation.eulerAngles));
 			Temp.transform.parent = null;
 			//After you place a track reset the rotation so if a track is placed on the track that just was placed, it is placed facing the same direction
 			MouseScrollOffset = MouseScroll;
