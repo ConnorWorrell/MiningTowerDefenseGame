@@ -11,9 +11,11 @@ public class PlayerOverviewer : MonoBehaviour {
 
 	private float MouseScrollLast = 0;
 
+	public int NumKey = 0;
+
 	// Use this for initialization
 	void Start () {
-
+		Cursor.lockState = CursorLockMode.Locked;
 	}
 	
 	// Update is called once per frame
@@ -40,6 +42,33 @@ public class PlayerOverviewer : MonoBehaviour {
 		//Mouse movement intentions
 		Mousedx = Input.GetAxis ("Mouse X");
 		Mousedy = Input.GetAxis ("Mouse Y");
+
+		//Release mouse lock if escape is pressed
+		if(Input.GetKeyDown(KeyCode.Escape))
+			Cursor.lockState = CursorLockMode.None;
+
+		if (Input.GetKeyDown (KeyCode.Alpha1))
+			NumKey = 1;
+		else if (Input.GetKeyDown (KeyCode.Alpha2))
+			NumKey = 2;
+		else if (Input.GetKeyDown (KeyCode.Alpha3))
+			NumKey = 3;
+		else if (Input.GetKeyDown (KeyCode.Alpha4))
+			NumKey = 4;
+		else if (Input.GetKeyDown (KeyCode.Alpha5))
+			NumKey = 5;
+		else if (Input.GetKeyDown (KeyCode.Alpha6))
+			NumKey = 6;
+		else if (Input.GetKeyDown (KeyCode.Alpha7))
+			NumKey = 7;
+		else if (Input.GetKeyDown (KeyCode.Alpha8))
+			NumKey = 8;
+		else if (Input.GetKeyDown (KeyCode.Alpha9))
+			NumKey = 9;
+		else if (Input.GetKeyDown (KeyCode.Alpha0))
+			NumKey = 0;
+
+
 
 	}
 }

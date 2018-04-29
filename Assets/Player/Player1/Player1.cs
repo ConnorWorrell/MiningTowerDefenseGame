@@ -13,7 +13,10 @@ public class Player1 : MonoBehaviour {
 
 	//Game Objects that are needed for the player to function
 	public GameObject PlayerOverviewerPrefab, SpawnPoint, ConveyorHoldPosition;
-	public GameObject HeldObject, ConveyorStraightBasicPrefab, ConveyorLeft90BasicPrefab, ConveyorRight90BasicPrefab;
+	public GameObject HeldObject, GunHeld;
+	public GameObject PreConveyorStraightBasicPrefab, ConveyorStraightBasicPrefab;
+	public GameObject PreConveyorLeft90BasicPrefab, ConveyorLeft90BasicPrefab;
+	public GameObject PreConveyorRight90BasicPrefab, ConveyorRight90BasicPrefab;
 	private GameObject HoldingPlace;
 
 	//PowerSupplied is ammount of power put into circle, power supplied multiplier changes rate of power supply
@@ -38,38 +41,36 @@ public class Player1 : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Holding != null){
-			if(Holding.GetComponent<ID> () != null)
-				ObjectHoldingId = Holding.GetComponent<ID> ().ObjID;
-			else
-				Debug.LogError("Player Holding Object Without ID Number");
-		} else
-			ObjectHoldingId = 0;
+		ObjectHoldingId = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer>().NumKey;
 
 		if (ObjectHoldingId != ObjectHoldingIdLast) {
 			Destroy (HeldObject);
 		}
 		switch (ObjectHoldingId) {
 		case 1: //Gun1
+			Holding = GunHeld;
 			Gun1 ();
 			break;
 		case 2: //Conveyor Straight Basic PrePlace
-			ConveyorStraightBasicPrePlace ();
+			Holding = PreConveyorStraightBasicPrefab;
 			HoldingPlace = ConveyorStraightBasicPrefab;
 			StartingPosition = HoldingPlace.transform.position;
 			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
+			ConveyorStraightBasicPrePlace ();
 			break;
 		case 3: //Conveyor Right 90 Basic PrePlace
-			ConveyorStraightBasicPrePlace ();
+			Holding = PreConveyorRight90BasicPrefab;
 			HoldingPlace = ConveyorRight90BasicPrefab;
 			StartingPosition = HoldingPlace.transform.position;
 			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
+			ConveyorStraightBasicPrePlace ();
 			break;
 		case 4: //Conveyor Left 90 Basic PrePlace
-			ConveyorStraightBasicPrePlace ();
+			Holding = PreConveyorLeft90BasicPrefab;
 			HoldingPlace = ConveyorLeft90BasicPrefab;
 			StartingPosition = HoldingPlace.transform.position;
 			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
+			ConveyorStraightBasicPrePlace ();
 			break;
 		default://Nothing or unknown
 			break;
@@ -156,10 +157,12 @@ public class Player1 : MonoBehaviour {
 		Shooting = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().LeftClick;
 		Charging = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().RightClick;
 
-		HeldObject.GetComponent<Gun1Controller> ().Fire = Shooting;
-		if (Charging && PowerStorage > PowerTransferRateToGun * Time.deltaTime) {
-			HeldObject.GetComponent<Gun1Controller> ().StoredPower = HeldObject.GetComponent<Gun1Controller> ().StoredPower + PowerTransferRateToGun * Time.deltaTime;
-			PowerStorage = PowerStorage - PowerTransferRateToGun * Time.deltaTime;
+		if (HeldObject != null && HeldObject.GetComponent<ID> ().ObjID == 1) {
+			HeldObject.GetComponent<Gun1Controller> ().Fire = Shooting;
+			if (Charging && PowerStorage > PowerTransferRateToGun * Time.deltaTime) {
+				HeldObject.GetComponent<Gun1Controller> ().StoredPower = HeldObject.GetComponent<Gun1Controller> ().StoredPower + PowerTransferRateToGun * Time.deltaTime;
+				PowerStorage = PowerStorage - PowerTransferRateToGun * Time.deltaTime;
+			}
 		}
 	}
 
