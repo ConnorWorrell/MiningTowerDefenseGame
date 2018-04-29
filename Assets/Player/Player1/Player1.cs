@@ -25,7 +25,7 @@ public class Player1 : MonoBehaviour {
 
 	//LeftClick for to add power, right click to subtract power
 	public bool Shooting = false, Charging = false;
-	private bool LeftClickLast = false;
+	private bool LeftClickLast = false, RightClick = false, RightClickLast = false;
 	public int MouseScroll = 0, MouseScrollOffset = 0, MouseScrollL = 0;
 
 	public Vector3 StartingPosition, StartingRotation;
@@ -95,6 +95,21 @@ public class Player1 : MonoBehaviour {
 		RaycastHit hit;
 		Debug.DrawRay (Camera.transform.position, Camera.transform.forward);
 		Physics.Raycast (Camera.transform.position, Camera.transform.forward, out hit, 5);
+
+
+		RightClick = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().RightClick;
+		//if (RightClick == true)
+			//break;
+		if (RightClick == false && RightClickLast == true) {
+			if (hit.collider.gameObject.transform.parent != null) {
+				if (hit.collider.gameObject.transform.parent.parent != null)
+					Destroy (hit.collider.gameObject.transform.parent.parent.gameObject);
+				else
+					Destroy (hit.collider.gameObject.transform.parent.gameObject);
+			}
+		}
+
+		RightClickLast = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().RightClick;
 
 		//If nothing that is snapable was hit then don't snap to anything
 		if (hit.collider == null || hit.collider.gameObject.GetComponentInParent<ConveyorDirection> () == null) {
