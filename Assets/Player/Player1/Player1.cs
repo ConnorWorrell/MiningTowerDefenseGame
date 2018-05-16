@@ -12,11 +12,13 @@ public class Player1 : MonoBehaviour {
 	public GameObject Holding, Camera;
 
 	//Game Objects that are needed for the player to function
-	public GameObject PlayerOverviewerPrefab, SpawnPoint, ConveyorHoldPosition;
+	public GameObject PlayerOverviewerPrefab, SpawnPoint, ConveyorHoldPosition, ExtractorHoldPosition;
 	public GameObject HeldObject, GunHeld;
 	public GameObject PreConveyorStraightBasicPrefab, ConveyorStraightBasicPrefab;
 	public GameObject PreConveyorLeft90BasicPrefab, ConveyorLeft90BasicPrefab;
 	public GameObject PreConveyorRight90BasicPrefab, ConveyorRight90BasicPrefab;
+	public GameObject PreExtractor, Extractor;
+
 	private GameObject HoldingPlace;
 
 	//PowerSupplied is ammount of power put into circle, power supplied multiplier changes rate of power supply
@@ -72,10 +74,91 @@ public class Player1 : MonoBehaviour {
 			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
 			ConveyorStraightBasicPrePlace ();
 			break;
+		case 5: //Ore Extractor
+			Holding = PreExtractor;
+			HoldingPlace = Extractor;
+			StartingPosition = HoldingPlace.transform.position;
+			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
+			ExtractorPrePlace ();
+			break;
 		default://Nothing or unknown
 			break;
 		}
 		ObjectHoldingIdLast = ObjectHoldingId;
+	}
+
+	void ExtractorPrePlace(){
+		MouseScroll = (int)GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().MouseScroll;
+		//Keep MouseScrollL positive
+		if (MouseScrollL < 0)
+			MouseScrollOffset = MouseScrollOffset - 4;
+		//Offset keeps it positive, and since MouseScroll is read only MouseScroll L is the local version
+		MouseScrollL = MouseScroll - MouseScrollOffset;
+
+		if(HeldObject == null)
+			HeldObject = Instantiate (Holding, ExtractorHoldPosition.transform);
+
+		RaycastHit hit;
+		Debug.DrawRay (Camera.transform.position, Camera.transform.forward);
+		Physics.Raycast (Camera.transform.position, Camera.transform.forward, out hit, 5);
+
+
+		RightClick = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().RightClick;
+		//if (RightClick == true)
+		//break;
+		if (RightClick == false && RightClickLast == true) {
+			if (hit.collider.gameObject.transform.parent != null) {
+				if (hit.collider.gameObject.transform.parent.parent != null)
+					Destroy (hit.collider.gameObject.transform.parent.parent.gameObject);
+				else
+					Destroy (hit.collider.gameObject.transform.parent.gameObject);
+			}
+			//else
+			//Destroy (hit.collider.gameObject);
+		}
+
+		RightClickLast = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().RightClick;
+
+		//If nothing that is snapable was hit then don't snap to anything
+		if (hit.collider == null || hit.collider.gameObject.GetComponentInParent<OreSnapping> () == null) {
+			HeldObject.transform.localPosition = new Vector3 (0, 0, 0);// StartingPosition;
+			HeldObject.transform.localRotation = Quaternion.Euler (new Vector3 (0, 0, 0));//Quaternion.Euler(StartingRotation);
+		} else {
+			//If something snapable is found then snap to it
+			Trackview = hit.collider.gameObject.GetComponentInParent<OreSnapping> ().gameObject.transform;
+
+			HeldObject.transform.position = hit.collider.gameObject.GetComponentInParent<OreSnapping> ().gameObject.transform.position + new Vector3(0,hit.collider.gameObject.transform.localScale.y,0);
+
+			Debug.Log (Trackview.localRotation.eulerAngles);
+
+			//4 different rotations for the tracks to placed on
+			switch (MouseScrollL % 4) {
+			case 3:
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.localRotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 270f + StartingRotation.y,Trackview.localRotation.eulerAngles.x));
+				break;
+			case 2:
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.localRotation.eulerAngles.x,Trackview.rotation.eulerAngles.y - 180f + StartingRotation.y,-Trackview.localRotation.eulerAngles.z));
+				break;
+			case 1:
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 90f + StartingRotation.y,-Trackview.localRotation.eulerAngles.x));
+				break;
+			default:// case 0
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.x,Trackview.rotation.eulerAngles.y + StartingRotation.y,Trackview.localRotation.eulerAngles.z));
+				break;
+
+			}
+
+			//HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.z * (MouseScroll % 4),Trackview.localRotation.eulerAngles.y * (MouseScroll % 4) * 90f,Trackview.localRotation.eulerAngles.z * (MouseScroll % 4)));
+		}
+
+		if (GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().LeftClick == true && LeftClickLast == false) {
+			GameObject Temp = Instantiate (HoldingPlace, HeldObject.transform.position, Quaternion.Euler(HeldObject.transform.rotation.eulerAngles));
+			Temp.transform.parent = null;
+			Temp.gameObject.GetComponent<OreExtractor> ().DropID = (hit.collider != null && hit.collider.gameObject.GetComponentInParent<OreSnapping> () != null) ? hit.collider.gameObject.GetComponentInParent<OreSnapping> ().OreID : 0;
+			//After you place a track reset the rotation so if a track is placed on the track that just was placed, it is placed facing the same direction
+			MouseScrollOffset = MouseScroll;
+		}
+		LeftClickLast = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().LeftClick;
 	}
 
 	void ConveyorStraightBasicPrePlace() {
@@ -107,6 +190,8 @@ public class Player1 : MonoBehaviour {
 				else
 					Destroy (hit.collider.gameObject.transform.parent.gameObject);
 			}
+			//else
+				//Destroy (hit.collider.gameObject);
 		}
 
 		RightClickLast = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().RightClick;

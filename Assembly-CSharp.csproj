@@ -50,6 +50,9 @@
      <Compile Include="Assets\Mining\Conveyor\ConveyorDirection.cs" />
      <Compile Include="Assets\Mining\Ore\MoveConveyor.cs" />
      <Compile Include="Assets\Mining\Ore\OreDropperTest.cs" />
+     <Compile Include="Assets\OreExtractor.cs" />
+     <Compile Include="Assets\OreSnapping.cs" />
+     <Compile Include="Assets\OreTextureRamdom.cs" />
      <Compile Include="Assets\Player\Hanheld\Gun1\Gun1Controller.cs" />
      <Compile Include="Assets\Player\Hanheld\Gun1\Shell1Controller.cs" />
      <Compile Include="Assets\Player\Hanheld\ID.cs" />
