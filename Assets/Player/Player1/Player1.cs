@@ -18,6 +18,8 @@ public class Player1 : MonoBehaviour {
 	public GameObject PreConveyorLeft90BasicPrefab, ConveyorLeft90BasicPrefab;
 	public GameObject PreConveyorRight90BasicPrefab, ConveyorRight90BasicPrefab;
 	public GameObject PreExtractor, Extractor;
+	public GameObject PreConveyorUp45, ConveyorUp45;
+	public GameObject PreConveyorDown45, ConveyorDown45;
 
 	private GameObject HoldingPlace;
 
@@ -80,6 +82,20 @@ public class Player1 : MonoBehaviour {
 			StartingPosition = HoldingPlace.transform.position;
 			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
 			ExtractorPrePlace ();
+			break;
+		case 6: //45 Up
+			Holding = PreConveyorUp45;
+			HoldingPlace = ConveyorUp45;
+			StartingPosition = HoldingPlace.transform.position;
+			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
+			ConveyorStraightBasicPrePlace ();
+			break;
+		case 7: //45 Down
+			Holding = PreConveyorDown45;
+			HoldingPlace = ConveyorDown45;
+			StartingPosition = HoldingPlace.transform.position;
+			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
+			ConveyorStraightBasicPrePlace ();
 			break;
 		default://Nothing or unknown
 			break;
@@ -220,16 +236,16 @@ public class Player1 : MonoBehaviour {
 			//4 different rotations for the tracks to placed on
 			switch (MouseScrollL % 4) {
 			case 3:
-				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.localRotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 270f + StartingRotation.y,Trackview.localRotation.eulerAngles.x));
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.rotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 270f + StartingRotation.y,Trackview.rotation.eulerAngles.x));
 				break;
 			case 2:
-				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.localRotation.eulerAngles.x,Trackview.rotation.eulerAngles.y - 180f + StartingRotation.y,-Trackview.localRotation.eulerAngles.z));
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.rotation.eulerAngles.x,Trackview.rotation.eulerAngles.y - 180f + StartingRotation.y,-Trackview.rotation.eulerAngles.z));
 				break;
 			case 1:
-				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 90f + StartingRotation.y,-Trackview.localRotation.eulerAngles.x));
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.rotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 90f + StartingRotation.y,-Trackview.rotation.eulerAngles.x));
 				break;
 			default:// case 0
-				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.x,Trackview.rotation.eulerAngles.y + StartingRotation.y,Trackview.localRotation.eulerAngles.z));
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.rotation.eulerAngles.x,Trackview.rotation.eulerAngles.y + StartingRotation.y,Trackview.rotation.eulerAngles.z));
 				break;
 
 			}

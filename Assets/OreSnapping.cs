@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class OreSnapping : MonoBehaviour {
 
+	//Id of the ore, used by the extractor to tell what type of ore to drop
 	public int OreID = 1;
 
 	// Use this for initialization
