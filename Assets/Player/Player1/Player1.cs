@@ -134,16 +134,16 @@ public class Player1 : MonoBehaviour {
 			//4 different rotations for the tracks to placed on
 			switch (MouseScrollL % 4) {
 			case 3:
-				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.localRotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 270f + StartingRotation.y,Trackview.localRotation.eulerAngles.x));
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.localRotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 90f + StartingRotation.y,Trackview.localRotation.eulerAngles.x));
 				break;
 			case 2:
-				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.localRotation.eulerAngles.x,Trackview.rotation.eulerAngles.y - 180f + StartingRotation.y,-Trackview.localRotation.eulerAngles.z));
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(-Trackview.localRotation.eulerAngles.x,Trackview.rotation.eulerAngles.y + StartingRotation.y,-Trackview.localRotation.eulerAngles.z));
 				break;
 			case 1:
-				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.z,Trackview.rotation.eulerAngles.y - 90f + StartingRotation.y,-Trackview.localRotation.eulerAngles.x));
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.z,Trackview.rotation.eulerAngles.y + 90f + StartingRotation.y,-Trackview.localRotation.eulerAngles.x));
 				break;
 			default:// case 0
-				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.x,Trackview.rotation.eulerAngles.y + StartingRotation.y,Trackview.localRotation.eulerAngles.z));
+				HeldObject.transform.rotation = Quaternion.Euler (new Vector3(Trackview.localRotation.eulerAngles.x,Trackview.rotation.eulerAngles.y + 180f + StartingRotation.y,Trackview.localRotation.eulerAngles.z));
 				break;
 
 			}
