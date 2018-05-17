@@ -102,14 +102,14 @@ public class Player1 : MonoBehaviour {
 			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
 			ConveyorStraightBasicPrePlace ();
 			break;
-		case 8:
+		case 8://T Connector
 			Holding = PreTConveyor;
 			HoldingPlace = TConveyor;
 			StartingPosition = HoldingPlace.transform.position;
 			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
 			ConveyorStraightBasicPrePlace ();
 			break;
-		case 9:
+		case 9://+ Connector
 			Holding = PreXConveyor;
 			HoldingPlace = XConveyor;
 			StartingPosition = HoldingPlace.transform.position;
@@ -191,7 +191,6 @@ public class Player1 : MonoBehaviour {
 			Temp.transform.parent = null;
 			Temp.gameObject.GetComponent<OreExtractor> ().DropID = (hit.collider != null && hit.collider.gameObject.GetComponentInParent<OreSnapping> () != null) ? hit.collider.gameObject.GetComponentInParent<OreSnapping> ().OreID : 0;
 			//After you place a track reset the rotation so if a track is placed on the track that just was placed, it is placed facing the same direction
-			MouseScrollOffset = MouseScroll;
 		}
 		LeftClickLast = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer> ().LeftClick;
 	}
