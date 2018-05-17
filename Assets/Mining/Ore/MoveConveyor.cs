@@ -40,12 +40,16 @@ public class MoveConveyor : MonoBehaviour {
 			ForceLast = new Vector3 (0, 0, 0);
 			if (KillOnImpact == false) {
 				Drag = 0;
+			} else {
+				Drag = 0.05f;
 			}
 			ForceDirection = new Vector3 (0, 0, 0);
-
+			//Drag = 0.1f;
 		//If the object is sitting on conveyor belt apply drag and get force direction of conveyor
 		} else if (hit.collider.gameObject.GetComponentInParent<ConveyorDirection> () != null) {
-			if(KillOnImpact == false)
+			if (KillOnImpact == false)
+				Drag = InitialDrag;
+			else
 				Drag = InitialDrag;
 			ForceDirection = hit.collider.gameObject.GetComponentInParent<ConveyorDirection> ().MovementDirection;
 
@@ -62,14 +66,18 @@ public class MoveConveyor : MonoBehaviour {
 
 		//Apply velocity based drag on object
 		Vector3 Velocity = rB.velocity;
-		ForceDirection.Set (ForceDirection.x - Velocity.x * Drag, ForceDirection.y, ForceDirection.z - Velocity.z * Drag);
 
-		ForceDirection = (ForceDirection + ForceLast * ForceLagTime * Time.fixedTime) / (1 + ForceLagTime * Time.fixedTime);
+		ForceDirection = ForceDirection * (1 - ForceLagTime) + ForceLast * ForceLagTime;
+		ForceLast = ForceDirection;
+
+		ForceDirection.Set (ForceDirection.x - /*(Velocity.x > 0 ? 1 : -1) * Velocity.x */ Velocity.x * Drag, ForceDirection.y - /*(Velocity.y > 0 ? 1 : -1) * Velocity.y */  Velocity.y * Drag, ForceDirection.z - /*(Velocity.z > 0 ? 1 : -1) * Velocity.z */ Velocity.z * Drag);
+
+		//ForceDirection = (ForceDirection + ForceLast * ForceLagTime * Time.fixedTime) / (1 + ForceLagTime * Time.fixedTime);
 
 		//add force at the point of contact between the object and conveyor
 		rB.AddForceAtPosition (ForceDirection*Time.fixedTime, hit.point);
 
-		ForceLast = ForceDirection;
+
 
 
 

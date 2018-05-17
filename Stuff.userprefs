@@ -1,17 +1,17 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Player\PlayerMovement.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Player\Player1\Player1.cs">
     <Files>
-      <File FileName="Assets\Player\Player1\Player1.cs" Line="1" Column="1" />
+      <File FileName="Assets\Player\Player1\Player1.cs" Line="228" Column="132" />
       <File FileName="Assets\Player\PlayerMovement.cs" Line="1" Column="1" />
       <File FileName="Assets\Player\Hanheld\Gun1\Gun1Controller.cs" Line="1" Column="1" />
       <File FileName="Assets\Player\Hanheld\Gun1\Shell1Controller.cs" Line="1" Column="1" />
       <File FileName="Assets\Mining\Ore\MoveConveyor.cs" Line="1" Column="1" />
       <File FileName="Assets\Mining\Ore\OreDropperTest.cs" Line="1" Column="1" />
       <File FileName="Assets\Player\Overview\PlayerOverviewer.cs" Line="1" Column="1" />
-      <File FileName="Assets\OreTextureRamdom.cs" Line="1" Column="1" />
-      <File FileName="Assets\OreExtractor.cs" Line="1" Column="1" />
-      <File FileName="Assets\OreSnapping.cs" Line="1" Column="1" />
+      <File FileName="Assets\OreTextureRamdom.cs" Line="22" Column="50" />
+      <File FileName="Assets\OreExtractor.cs" Line="21" Column="43" />
+      <File FileName="Assets\OreSnapping.cs" Line="7" Column="73" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
