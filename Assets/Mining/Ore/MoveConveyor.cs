@@ -75,7 +75,7 @@ public class MoveConveyor : MonoBehaviour {
 		//ForceDirection = (ForceDirection + ForceLast * ForceLagTime * Time.fixedTime) / (1 + ForceLagTime * Time.fixedTime);
 
 		//add force at the point of contact between the object and conveyor
-		rB.AddForceAtPosition (ForceDirection*Time.fixedTime, hit.point);
+		rB.AddForceAtPosition (ForceDirection * 7, hit.point);
 
 
 
