@@ -20,6 +20,7 @@ public class Player1 : MonoBehaviour {
 	public GameObject PreExtractor, Extractor;
 	public GameObject PreConveyorUp45, ConveyorUp45;
 	public GameObject PreConveyorDown45, ConveyorDown45;
+	public GameObject PreTConveyor, TConveyor;
 
 	private GameObject HoldingPlace;
 
@@ -46,6 +47,9 @@ public class Player1 : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		ObjectHoldingId = GameObject.Find ("PlayerOverviewer").GetComponent<PlayerOverviewer>().NumKey;
+
+		if (HeldObject != null && HeldObject.GetComponent<ID> () == null)
+			Debug.LogWarning ("Held Object without ID" + HeldObject.name);
 
 		if (ObjectHoldingId != ObjectHoldingIdLast) {
 			Destroy (HeldObject);
@@ -93,6 +97,13 @@ public class Player1 : MonoBehaviour {
 		case 7: //45 Down
 			Holding = PreConveyorDown45;
 			HoldingPlace = ConveyorDown45;
+			StartingPosition = HoldingPlace.transform.position;
+			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
+			ConveyorStraightBasicPrePlace ();
+			break;
+		case 8:
+			Holding = PreTConveyor;
+			HoldingPlace = TConveyor;
 			StartingPosition = HoldingPlace.transform.position;
 			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
 			ConveyorStraightBasicPrePlace ();
