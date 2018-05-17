@@ -21,6 +21,7 @@ public class Player1 : MonoBehaviour {
 	public GameObject PreConveyorUp45, ConveyorUp45;
 	public GameObject PreConveyorDown45, ConveyorDown45;
 	public GameObject PreTConveyor, TConveyor;
+	public GameObject PreXConveyor, XConveyor;
 
 	private GameObject HoldingPlace;
 
@@ -104,6 +105,13 @@ public class Player1 : MonoBehaviour {
 		case 8:
 			Holding = PreTConveyor;
 			HoldingPlace = TConveyor;
+			StartingPosition = HoldingPlace.transform.position;
+			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
+			ConveyorStraightBasicPrePlace ();
+			break;
+		case 9:
+			Holding = PreXConveyor;
+			HoldingPlace = XConveyor;
 			StartingPosition = HoldingPlace.transform.position;
 			StartingRotation = HoldingPlace.transform.rotation.eulerAngles;
 			ConveyorStraightBasicPrePlace ();
